@@ -4,31 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Eagler.Host-Wiki | Knowledge Hub</title>
-  <!-- Favicon -->
   <link rel="icon" href="https://i.imgur.com/iTjd1k1.png" type="image/png">
-  <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Google Fonts & Font Awesome -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ===== ALL STYLES ===== */
+    /* ===== ALL STYLES (unchanged – keep your existing CSS) ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #0A0603; color: #F5EAD8; overflow-x: hidden; }
-
     .landing-container { min-height: 100vh; background: #0A0603; background-image: linear-gradient(to right, #E5832508 1px, transparent 1px), linear-gradient(to bottom, #E5832508 1px, transparent 1px); background-size: 32px 32px; display: flex; flex-direction: column; transition: opacity 0.6s ease, visibility 0.6s; }
     .top-header { background: #140C06; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border-bottom: 2px solid #E58325; box-shadow: 0 4px 12px rgba(0,0,0,0.2); gap: 0.8rem; }
     .logo-area { display: flex; align-items: center; gap: 15px; }
     .logo-placeholder { width: 42px; height: 42px; border-radius: 12px; overflow: hidden; flex-shrink: 0; background: #140C06; display: flex; align-items: center; justify-content: center; }
     .logo-placeholder img { width: 100%; height: 100%; object-fit: contain; }
     .site-title { font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #E58325, #E58325); background-clip: text; -webkit-background-clip: text; color: transparent; }
-
     .search-wrapper { flex: 1; max-width: 500px; min-width: 200px; margin: 0 1rem; position: relative; }
     .search-wrapper .search-bar { width: 100%; padding: 0.7rem 1rem 0.7rem 2.6rem; border-radius: 30px; border: 2px solid #FFFFFF; background: #1A0F08; color: #FFFFFF; font-size: 1.05rem; font-weight: 600; outline: none; transition: border 0.2s; }
     .search-wrapper .search-bar:focus { border-color: #E58325; box-shadow: 0 0 8px rgba(229, 131, 37, 0.3); }
     .search-wrapper .search-bar::placeholder { color: #FFFFFF; font-weight: 400; opacity: 0.8; }
     .search-wrapper .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #FFFFFF; font-size: 1.1rem; }
-
     .search-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #140C06; border: 1px solid #E5832540; border-radius: 16px; padding: 0.5rem 0; z-index: 100; display: none; max-height: 300px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
     .search-dropdown.active { display: block; }
     .search-dropdown .result-item { padding: 0.6rem 1.2rem; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 500; transition: background 0.15s; color: #FFFFFF; }
@@ -37,7 +31,6 @@
     .result-home .item-icon { color: #FFFFFF; }
     .result-info .item-icon { color: #E58325; }
     .result-setup .item-icon { color: #42A5F5; }
-
     .header-actions { display: flex; align-items: center; gap: 0.8rem; }
     .icon-btn { background: transparent; border: none; color: #F0DDB6; font-size: 1.3rem; cursor: pointer; padding: 0.3rem; border-radius: 50%; transition: background 0.2s, color 0.2s; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
     .icon-btn:hover { background: #E5832520; color: #E58325; }
@@ -47,24 +40,19 @@
     .icon-btn.outline-green:hover { background: #4CAF5020; color: #4CAF50; }
     .icon-btn.outline-yellow { border: 2px solid #FFC107; color: #FFC107; }
     .icon-btn.outline-yellow:hover { background: #FFC10720; color: #FFC107; }
-
     .discord-animated { background: #5865F2; padding: 0.5rem 1.2rem; border-radius: 40px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-weight: 600; transition: 0.2s; box-shadow: 0 0 0 0 rgba(88,101,242,0.7); animation: pulse 2s infinite; white-space: nowrap; }
     .discord-animated i { font-size: 1.3rem; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(88,101,242,0.7); } 70% { box-shadow: 0 0 0 12px rgba(88,101,242,0); } 100% { box-shadow: 0 0 0 0 rgba(88,101,242,0); } }
     .discord-animated:hover { background: #4752c4; transform: scale(1.02); animation: none; }
-
     .landing-main { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; }
     .neon-title { font-size: 4.2rem; font-weight: 800; color: #E58325; text-shadow: 0 0 4px #E58325, 0 0 8px #E5832540; margin-bottom: 0.5rem; }
     .tagline { font-size: 1rem; color: #F0DDB6; max-width: 650px; margin: 0.5rem 0; }
     .dev-note { background: #140C06; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 60px; font-size: 0.9rem; color: #E58325; margin: 1rem 0; }
     .enter-wiki-btn { background: #E58325; border: none; padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: 700; border-radius: 60px; color: #140C06; cursor: pointer; transition: 0.2s; margin-top: 1rem; display: inline-flex; align-items: center; gap: 12px; box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
     .enter-wiki-btn:hover { background: #F0943F; transform: translateY(-3px); }
-
     footer { text-align: center; padding: 1.5rem; font-size: 0.8rem; border-top: 1px solid #E58325; color: #D9B48B; background: #140C06; }
-
     .wiki-app { display: none; flex-direction: column; min-height: 100vh; background: #0A0603; }
     .wiki-app.active { display: flex; }
-
     .wiki-layout { display: flex; flex: 1; position: relative; }
     .sidebar-wrapper { position: relative; display: flex; flex-shrink: 0; height: 100%; }
     .sidebar { width: 280px; background: #140C06; border-right: 2px solid #E58325; padding: 1.5rem 1rem; height: 100%; overflow-y: auto; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; transition: transform 0.3s ease; transform: translateX(0); z-index: 10; }
@@ -74,7 +62,6 @@
     .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
     .nav-category { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #E58325; margin-top: 1rem; margin-bottom: 0.3rem; transition: color 0.2s; }
     .nav-category.setup-category { color: #42A5F5; }
-
     .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 0.7rem 1rem; border-radius: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; color: #FFFFFF; }
     .sidebar-link i { width: 24px; }
     .sidebar-link:hover { background: #E5832520; }
@@ -84,21 +71,18 @@
     .sidebar-link.active-home { border-left: 4px solid #FFFFFF; background: #FFFFFF20; }
     .sidebar-link.active-info { border-left: 4px solid #E58325; background: #E5832520; }
     .sidebar-link.active-setup { border-left: 4px solid #42A5F5; background: #42A5F520; }
-
     .main-content { flex: 1; padding: 2rem 2rem; background: #0A0603; overflow-y: auto; }
     .page-title { font-size: 2rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem; border-left: 5px solid #E58325; padding-left: 1rem; }
     .page-title i { margin-right: 0.5rem; }
     .page-title.title-home i { color: #FFFFFF; }
     .page-title.title-info i { color: #E58325; }
     .page-title.title-setup i { color: #42A5F5; }
-
     .sub-tabs-container { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; padding-left: 1rem; flex-wrap: wrap; }
     .sub-tab { padding: 0.5rem 1.2rem; font-size: 0.85rem; font-weight: 500; color: #B88A5A; cursor: pointer; transition: all 0.2s ease; background: transparent; border: none; border-bottom: 3px solid transparent; white-space: nowrap; }
     .sub-tab:hover { color: #E58325; }
     .sub-tab.active { color: #E58325; border-bottom-color: #E58325; }
     .sub-tab-line { flex: 0 0 20px; height: 2px; background: #E5832540; }
     .sub-tab:last-child .sub-tab-line { display: none; }
-
     .content-block { background: #140C06; border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #E58325; display: none; }
     .content-block.active { display: block; }
     .content-block h3 { color: #E58325; margin-bottom: 0.8rem; font-size: 1.3rem; }
@@ -106,29 +90,23 @@
     .content-block ul { list-style: none; padding-left: 0; }
     .content-block ul li { padding: 0.4rem 0; padding-left: 1.5rem; position: relative; color: #DDC5A5; }
     .content-block ul li::before { content: "▸"; color: #E58325; position: absolute; left: 0; }
-
     .info-box { background: #1A0F08; border-left: 4px solid #E58325; padding: 1rem 1.2rem; margin: 1rem 0; border-radius: 8px; }
     .info-box strong { color: #E58325; }
     .info-box ul { margin-top: 0.5rem; }
-
     .image-placeholder { background: #1A0F08; border: 2px dashed #E58325; border-radius: 16px; padding: 1rem; text-align: center; margin: 1rem 0; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #B88A5A; overflow: hidden; }
     .image-placeholder img { max-width: 100%; max-height: 400px; border-radius: 12px; object-fit: contain; }
     .image-placeholder i { font-size: 2rem; color: #E58325; margin-right: 0.5rem; }
-
     .join-discord-box { background: #1A0F08; border: 2px solid #5865F2; border-radius: 20px; padding: 1.5rem; text-align: center; margin-top: 0.5rem; }
     .join-discord-box h3 { color: #E58325; margin-bottom: 0.5rem; }
     .join-discord-box p { color: #DDC5A5; margin-bottom: 1rem; }
     .join-discord-box .discord-link-box { display: inline-block; background: #5865F2; padding: 0.6rem 1.5rem; border-radius: 40px; text-decoration: none; color: white; font-weight: 600; transition: 0.2s; }
     .join-discord-box .discord-link-box:hover { background: #4752c4; transform: scale(1.02); }
-
     .home-split { display: flex; gap: 1.5rem; margin-top: 0.5rem; }
     .home-split > div { flex: 1; background: #1A0F08; border-radius: 20px; padding: 1.5rem; border: 1px solid #E58325; }
     .home-split h3 { color: #E58325; margin-bottom: 0.8rem; }
     .home-split p { color: #DDC5A5; margin-bottom: 0.8rem; }
     .home-split .discord-link-box { display: inline-block; background: #5865F2; padding: 0.6rem 1.5rem; border-radius: 40px; text-decoration: none; color: white; font-weight: 600; transition: 0.2s; }
     .home-split .discord-link-box:hover { background: #4752c4; transform: scale(1.02); }
-
-    /* FAQ */
     .faq-item { background: #1A0F08; border-radius: 16px; margin-bottom: 1rem; border: 1px solid #E5832540; transition: all 0.2s ease; overflow: hidden; }
     .faq-item:hover { border-color: #E58325; }
     .faq-question { padding: 1.2rem 1.5rem; font-weight: 600; color: #F0DDB6; font-size: 1.05rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
@@ -136,8 +114,6 @@
     .faq-item.open .faq-question i { transform: rotate(180deg); }
     .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 1.5rem; color: #DDC5A5; line-height: 1.6; }
     .faq-item.open .faq-answer { max-height: 300px; padding: 0 1.5rem 1.2rem 1.5rem; }
-
-    /* Server Tiers */
     .tiers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 1.5rem; justify-items: center; }
     .tier-card { background: #1A0F08; border-radius: 16px; padding: 1.2rem 1rem; border: 1px solid #E5832540; transition: border-color 0.2s, transform 0.1s; text-align: center; width: 100%; max-width: 280px; }
     .tier-card:hover { border-color: #E58325; transform: translateY(-3px); }
@@ -158,28 +134,21 @@
     .tier-spec { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.9rem; }
     .tier-spec-label { color: #B88A5A; }
     .tier-spec-value { color: #F0DDB6; font-weight: 500; }
-
     .plugin-recommendations { background: #1A0F08; border-radius: 16px; padding: 1.5rem; border: 1px solid #E58325; margin-top: 1.5rem; }
     .plugin-recommendations h3 { color: #E58325; margin-bottom: 0.8rem; font-size: 1.3rem; }
     .plugin-recommendations ul { list-style: none; padding-left: 0; }
     .plugin-recommendations ul li { padding: 0.4rem 0; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #DDC5A5; }
     .plugin-recommendations ul li::before { content: "▸"; color: #E58325; position: absolute; left: 0; }
     .plugin-recommendations .note { color: #B88A5A; font-size: 0.85rem; margin-top: 0.8rem; font-style: italic; }
-
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin: 1.5rem 0; }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
-    /* News view */
     .news-view { display: none; flex-direction: column; min-height: 100vh; background: #0A0603; }
     .news-view.active { display: flex; }
     .news-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
     .news-content .placeholder { text-align: center; color: #B88A5A; font-size: 1.2rem; }
     .news-content .placeholder i { font-size: 3rem; color: #E58325; margin-bottom: 1rem; display: block; }
-
     .back-btn { background: transparent; border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 1rem; cursor: pointer; padding: 0.4rem 1.2rem; border-radius: 40px; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
     .back-btn:hover { background: #FFFFFF20; }
-
-    /* Admin Panel overlay */
     .admin-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; }
     .admin-overlay.active { display: flex; }
     .admin-panel { background: #140C06; border: 2px solid #E58325; border-radius: 24px; padding: 2rem; max-width: 90%; width: 800px; max-height: 90vh; overflow-y: auto; color: #F5EAD8; position: relative; }
@@ -200,11 +169,8 @@
     .admin-panel .admin-section .btn.danger:hover { background: #B71C1C; }
     .admin-panel .admin-section .btn.secondary { background: #1A0F08; border: 1px solid #E58325; color: #E58325; }
     .admin-panel .admin-section .btn.secondary:hover { background: #E5832520; }
-
     .admin-item { background: #1A0F08; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #E5832540; }
     .admin-item .item-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
-
-    /* Suggestion view */
     .suggestion-view { display: none; flex-direction: column; min-height: 100vh; background: #0A0603; }
     .suggestion-view.active { display: flex; }
     .suggestion-content { flex: 1; padding: 2rem; max-width: 600px; margin: 0 auto; width: 100%; }
@@ -216,8 +182,6 @@
     .suggestion-content .btn-submit { background: #E58325; border: none; padding: 0.8rem 2rem; border-radius: 40px; color: #140C06; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .suggestion-content .btn-submit:hover { background: #F0943F; }
     .suggestion-content .success-msg { background: #2E7D32; color: #A5D6A7; padding: 1rem; border-radius: 12px; margin-top: 1rem; }
-
-    /* Announcement modal */
     .announcement-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; }
     .announcement-modal.active { display: flex; }
     .announcement-box { background: #140C06; border: 2px solid #E58325; border-radius: 24px; padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
@@ -229,7 +193,6 @@
     .announcement-box .announcement-item h3 { color: #E58325; }
     .announcement-box .announcement-item p { color: #DDC5A5; }
     .announcement-box .announcement-item .embed { margin-top: 0.8rem; }
-
     @media (max-width: 768px) {
       .top-header { padding: 0.7rem 1rem; flex-direction: row; flex-wrap: wrap; }
       .site-title { font-size: 1.2rem; }
@@ -257,7 +220,7 @@
 </head>
 <body>
 
-<!-- LANDING PAGE -->
+<!-- ===== LANDING PAGE ===== -->
 <div id="landingPage" class="landing-container">
   <div class="top-header">
     <div class="logo-area">
@@ -275,7 +238,6 @@
       </a>
     </div>
   </div>
-
   <div class="landing-main">
     <div class="neon-title">Eagler.Host-Wiki</div>
     <div class="tagline">Everything you need to know about Eagler.host, Find Support, Learn setups, and more!</div>
@@ -284,11 +246,10 @@
       <i class="fas fa-arrow-right-to-bracket"></i> Enter Wiki
     </button>
   </div>
-
   <footer>Ⓒ 2026 TopEaglerSource</footer>
 </div>
 
-<!-- MAIN WIKI APP -->
+<!-- ===== MAIN WIKI APP ===== -->
 <div id="wikiApp" class="wiki-app">
   <div class="top-header">
     <div class="logo-area">
@@ -297,14 +258,11 @@
       </div>
       <span class="site-title">Eagler.Host-Wiki</span>
     </div>
-
-    <!-- Search bar -->
     <div class="search-wrapper">
       <i class="fas fa-search search-icon"></i>
       <input type="text" id="searchInput" class="search-bar" placeholder="Search wiki..." autocomplete="off">
       <div id="searchDropdown" class="search-dropdown"></div>
     </div>
-
     <div class="header-actions">
       <button class="icon-btn outline-yellow" id="suggestBtnWiki"><i class="fas fa-lightbulb"></i></button>
       <button class="icon-btn outline-green" id="bellBtnWiki"><i class="fas fa-bell"></i></button>
@@ -314,30 +272,22 @@
       </a>
     </div>
   </div>
-
   <div class="wiki-layout">
     <div class="sidebar-wrapper">
       <aside id="wikiSidebar" class="sidebar">
         <div class="sidebar-header" style="margin-bottom: 1.5rem;">
           <h3 style="color:#E58325;"><i class="fas fa-compass"></i> Navigation</h3>
         </div>
-        <div class="sidebar-nav" id="sidebarNav">
-          <!-- Dynamically built -->
-        </div>
+        <div class="sidebar-nav" id="sidebarNav"></div>
       </aside>
-
       <button id="toggleSidebarBtn" class="toggle-sidebar-btn"><i class="fas fa-chevron-left"></i></button>
     </div>
-
-    <main class="main-content" id="dynamicContent">
-      <!-- Home page content (default) will be rendered by JavaScript -->
-    </main>
+    <main class="main-content" id="dynamicContent"></main>
   </div>
-
   <footer id="mainFooter">Ⓒ 2026 TopEaglerSource</footer>
 </div>
 
-<!-- SUGGESTION VIEW -->
+<!-- ===== SUGGESTION VIEW ===== -->
 <div id="suggestionView" class="suggestion-view">
   <div class="top-header">
     <div class="logo-area">
@@ -371,7 +321,7 @@
   <footer>Ⓒ 2026 TopEaglerSource</footer>
 </div>
 
-<!-- ANNOUNCEMENT MODAL -->
+<!-- ===== ANNOUNCEMENT MODAL ===== -->
 <div id="announcementModal" class="announcement-modal">
   <div class="announcement-box">
     <button class="close-announcement" id="closeAnnouncementModal"><i class="fas fa-times"></i></button>
@@ -380,7 +330,7 @@
   </div>
 </div>
 
-<!-- ADMIN PANEL OVERLAY -->
+<!-- ===== ADMIN PANEL OVERLAY ===== -->
 <div id="adminOverlay" class="admin-overlay">
   <div class="admin-panel">
     <button class="close-admin" id="closeAdminPanel"><i class="fas fa-times"></i></button>
@@ -390,12 +340,10 @@
       <button class="admin-tab" data-tab="announcements">Announcements</button>
       <button class="admin-tab" data-tab="categories">Categories & Pages</button>
     </div>
-    <!-- Suggestions Section -->
     <div class="admin-section active" id="adminSuggestions">
       <h3>Pending Suggestions</h3>
       <div id="pendingSuggestions"></div>
     </div>
-    <!-- Announcements Section -->
     <div class="admin-section" id="adminAnnouncements">
       <h3>Manage Announcements</h3>
       <div style="margin-bottom:1rem;">
@@ -403,7 +351,6 @@
       </div>
       <div id="announcementAdminList"></div>
     </div>
-    <!-- Categories & Pages Section -->
     <div class="admin-section" id="adminCategories">
       <h3>Categories & Pages</h3>
       <div style="margin-bottom:1rem;">
@@ -424,23 +371,27 @@
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ============================================================
-  // ADMIN PASSWORD – FETCH FROM SUPABASE
+  // ADMIN PASSWORD – ALWAYS FETCHED FROM SUPABASE
   // ============================================================
-  let ADMIN_PASSWORD = '';
+  let ADMIN_PASSWORD = null; // will be set after fetch
 
   async function fetchAdminPassword() {
-    const { data, error } = await supabase
-      .from('admin_config')
-      .select('password')
-      .eq('id', 1)
-      .single();
-    if (error) {
-      console.error('Failed to fetch admin password:', error);
-      // Fallback – you can set a default, but better to alert the user
-      ADMIN_PASSWORD = '12NJix01(@45poc1zX'; // fallback
-      return;
+    try {
+      const { data, error } = await supabase
+        .from('admin_config')
+        .select('password')
+        .eq('id', 1)
+        .single();
+      if (error) {
+        console.warn('⚠️ Could not fetch admin password from Supabase. Check your table.', error);
+        ADMIN_PASSWORD = null; // prevent login
+        return;
+      }
+      if (data) ADMIN_PASSWORD = data.password;
+    } catch (err) {
+      console.warn('⚠️ Error fetching admin password:', err);
+      ADMIN_PASSWORD = null;
     }
-    if (data) ADMIN_PASSWORD = data.password;
   }
 
   // ============================================================
@@ -451,7 +402,7 @@
   function setAdminMode(on) {
     adminMode = on;
     localStorage.setItem('adminMode', on ? 'true' : 'false');
-    if (on) console.log('Admin mode activated.');
+    if (on) console.log('🔓 Admin mode activated.');
   }
 
   // ============================================================
@@ -556,7 +507,14 @@
   }
 
   async function promptAdminPassword() {
-    await fetchAdminPassword();
+    // Ensure we have the latest password from Supabase
+    if (ADMIN_PASSWORD === null) {
+      await fetchAdminPassword();
+    }
+    if (ADMIN_PASSWORD === null) {
+      alert('Admin password not set. Please run the SQL script first.');
+      return;
+    }
     const pwd = prompt('Enter admin password:');
     if (pwd === ADMIN_PASSWORD) {
       setAdminMode(true);
@@ -584,13 +542,14 @@
       document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-      document.getElementById('admin' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)).classList.add('active');
+      const sectionId = 'admin' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1);
+      document.getElementById(sectionId).classList.add('active');
       loadAdminData();
     });
   });
 
   // ============================================================
-  // SUGGESTIONS
+  // SUGGESTIONS (Admin)
   // ============================================================
   async function loadSuggestions() {
     const { data, error } = await supabase
@@ -600,7 +559,7 @@
       .order('created_at', { ascending: false });
     if (error) { console.error(error); return; }
     const container = document.getElementById('pendingSuggestions');
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
       container.innerHTML = '<p style="color:#B88A5A;">No pending suggestions.</p>';
       return;
     }
@@ -623,7 +582,7 @@
   }
 
   // ============================================================
-  // ANNOUNCEMENTS
+  // ANNOUNCEMENTS (Admin)
   // ============================================================
   async function loadAnnouncementsAdmin() {
     const { data, error } = await supabase
@@ -632,7 +591,7 @@
       .order('created_at', { ascending: false });
     if (error) { console.error(error); return; }
     const container = document.getElementById('announcementAdminList');
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
       container.innerHTML = '<p style="color:#B88A5A;">No announcements.</p>';
       return;
     }
@@ -670,7 +629,7 @@
   });
 
   // ============================================================
-  // CATEGORIES & PAGES
+  // CATEGORIES & PAGES (Admin)
   // ============================================================
   async function loadCategoriesAdmin() {
     const { data: cats, error } = await supabase
@@ -679,7 +638,7 @@
       .order('position', { ascending: true });
     if (error) { console.error(error); return; }
     const container = document.getElementById('categoryAdminList');
-    if (cats.length === 0) {
+    if (!cats || cats.length === 0) {
       container.innerHTML = '<p style="color:#B88A5A;">No categories. Create one!</p>';
       return;
     }
@@ -808,15 +767,15 @@
       .from('categories')
       .select('*')
       .order('position', { ascending: true });
-    if (catErr) { console.error(catErr); return; }
-    allCategories = cats;
+    if (catErr) { console.error('Categories fetch error:', catErr); return; }
+    allCategories = cats || [];
 
     const { data: pages, error: pageErr } = await supabase
       .from('pages')
       .select('*')
       .order('position', { ascending: true });
-    if (pageErr) { console.error(pageErr); return; }
-    allPages = pages;
+    if (pageErr) { console.error('Pages fetch error:', pageErr); return; }
+    allPages = pages || [];
 
     const sidebarNav = document.getElementById('sidebarNav');
     sidebarNav.innerHTML = '';
@@ -827,14 +786,14 @@
     homeLink.addEventListener('click', () => navigateTo('home'));
     sidebarNav.appendChild(homeLink);
 
-    cats.forEach(cat => {
+    allCategories.forEach(cat => {
       const catDiv = document.createElement('div');
       catDiv.className = 'nav-category';
       if (cat.name.toLowerCase().includes('setup')) catDiv.classList.add('setup-category');
       catDiv.innerHTML = `<i class="fas ${cat.icon}" style="color:${cat.icon_color};"></i> ${cat.name}`;
       sidebarNav.appendChild(catDiv);
 
-      const catPages = pages.filter(p => p.category_id === cat.id);
+      const catPages = allPages.filter(p => p.category_id === cat.id);
       catPages.forEach(p => {
         const link = document.createElement('div');
         link.className = 'sidebar-link info-link';
@@ -992,7 +951,7 @@
       document.querySelectorAll('.icon-btn.outline-green .red-dot').forEach(dot => dot.style.display = 'none');
     }
     const list = document.getElementById('announcementList');
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
       list.innerHTML = '<p style="color:#B88A5A;">No announcements yet.</p>';
       return;
     }
@@ -1109,7 +1068,7 @@
 
   function renderSearchDropdown(items) {
     searchDropdown.innerHTML = '';
-    if (items.length === 0) {
+    if (!items || items.length === 0) {
       searchDropdown.classList.remove('active');
       return;
     }
@@ -1194,11 +1153,12 @@
   // INIT
   // ============================================================
   window.addEventListener('DOMContentLoaded', () => {
+    fetchAdminPassword(); // pre-fetch password
     loadAnnouncements();
-    if (adminMode) console.log('Admin mode is active.');
+    if (adminMode) console.log('🔓 Admin mode is active.');
   });
 
-  console.log('Eagler.Host-Wiki with Supabase backend and full admin panel.');
+  console.log('🚀 Eagler.Host-Wiki with Supabase backend and admin panel.');
 </script>
 </body>
 </html>
