@@ -417,20 +417,37 @@
 
 <script>
   // ============================================================
-  // SUPABASE INIT
+  // SUPABASE INIT – REPLACE WITH YOUR CREDENTIALS
   // ============================================================
-  const SUPABASE_URL = 'https://mpnxxalnubyaudfniyqn.supabase.co'; // Replace with your URL
-  const SUPABASE_ANON_KEY = 'sb_publishable_2qSFiAkiwdQFS2G3u0RKxg_cJoPQKmW'; // Replace with your anon key
+  const SUPABASE_URL = 'https://mpnxxalnubyaudfniyqn.supabase.co'; // 👈 Replace
+  const SUPABASE_ANON_KEY = 'sb_publishable_2qSFiAkiwdQFS2G3u0RKxg_cJoPQKmW'; // 👈 Replace
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ============================================================
-  // ADMIN PASSWORD AND KONAMI CODE
+  // ADMIN PASSWORD – FETCH FROM SUPABASE
   // ============================================================
-  const ADMIN_PASSWORD = '12NJix01(@45poc1zX';
-  let adminMode = localStorage.getItem('adminMode') === 'true';
-  let konamiStep = 0;
+  let ADMIN_PASSWORD = '';
 
-  // Admin mode toggle
+  async function fetchAdminPassword() {
+    const { data, error } = await supabase
+      .from('admin_config')
+      .select('password')
+      .eq('id', 1)
+      .single();
+    if (error) {
+      console.error('Failed to fetch admin password:', error);
+      // Fallback – you can set a default, but better to alert the user
+      ADMIN_PASSWORD = '12NJix01(@45poc1zX'; // fallback
+      return;
+    }
+    if (data) ADMIN_PASSWORD = data.password;
+  }
+
+  // ============================================================
+  // ADMIN MODE
+  // ============================================================
+  let adminMode = localStorage.getItem('adminMode') === 'true';
+
   function setAdminMode(on) {
     adminMode = on;
     localStorage.setItem('adminMode', on ? 'true' : 'false');
@@ -452,17 +469,13 @@
   // ============================================================
   // KONAMI CODE DETECTION
   // ============================================================
-  // Sequence 1: ↑, →, ↓, →, ↑, ← (show X on footer)
   const seq1 = ['ArrowUp','ArrowRight','ArrowDown','ArrowRight','ArrowUp','ArrowLeft'];
   let seq1Pos = 0;
-  // Sequence 2: ↓, ←, ↑, ←, →, ↓ (after clicking X, show X in settings)
   const seq2 = ['ArrowDown','ArrowLeft','ArrowUp','ArrowLeft','ArrowRight','ArrowDown'];
   let seq2Pos = 0;
-  // Sequence 3: ↑, ↑, ↓, ←, ↓, ↑, → (after clicking X in settings, prompt password)
   const seq3 = ['ArrowUp','ArrowUp','ArrowDown','ArrowLeft','ArrowDown','ArrowUp','ArrowRight'];
   let seq3Pos = 0;
-
-  let phase = 'seq1'; // 'seq1', 'seq2', 'seq3'
+  let phase = 'seq1';
 
   document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -494,7 +507,7 @@
         seq3Pos++;
         if (seq3Pos === seq3.length) {
           seq3Pos = 0;
-          phase = 'seq1'; // reset
+          phase = 'seq1';
           promptAdminPassword();
         }
       } else {
@@ -514,7 +527,7 @@
       xBtn.innerHTML = '<i class="fas fa-times"></i>';
       xBtn.addEventListener('click', () => {
         xBtn.remove();
-        phase = 'seq2'; // start seq2
+        phase = 'seq2';
         seq2Pos = 0;
       });
       footer.appendChild(xBtn);
@@ -522,10 +535,7 @@
   }
 
   function showSettingsX() {
-    // Find the settings button (gear icon) and add an X badge
-    const settingsBtns = document.querySelectorAll('.icon-btn.outline-white .fa-gear');
-    // we'll add a small X overlay on the settings button
-    const settingsBtn = document.querySelector('.icon-btn.outline-white'); // the gear button
+    const settingsBtn = document.querySelector('.icon-btn.outline-white');
     if (!settingsBtn) return;
     let xBadge = document.getElementById('settingsXBadge');
     if (!xBadge) {
@@ -545,7 +555,8 @@
     }
   }
 
-  function promptAdminPassword() {
+  async function promptAdminPassword() {
+    await fetchAdminPassword();
     const pwd = prompt('Enter admin password:');
     if (pwd === ADMIN_PASSWORD) {
       setAdminMode(true);
@@ -644,7 +655,6 @@
     });
   }
 
-  // Create announcement
   document.getElementById('createAnnouncementBtn').addEventListener('click', () => {
     const title = prompt('Announcement Title:');
     if (!title) return;
@@ -693,7 +703,6 @@
       </div>
     `).join('');
 
-    // Delete category
     document.querySelectorAll('.delete-category-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         if (!confirm('Delete this category and all its pages?')) return;
@@ -702,7 +711,6 @@
         loadAdminData();
       });
     });
-    // Delete page
     document.querySelectorAll('.delete-page-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         if (!confirm('Delete this page?')) return;
@@ -711,18 +719,15 @@
         loadAdminData();
       });
     });
-    // Edit page (simplified: open a prompt to edit fields)
     document.querySelectorAll('.edit-page-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const id = e.target.dataset.id;
         const { data: page, error } = await supabase.from('pages').select('*').eq('id', id).single();
         if (error) { console.error(error); return; }
-        // Simple edit via prompts
         const newTitle = prompt('Edit title:', page.title) || page.title;
         const newIcon = prompt('Edit icon (Font Awesome class, e.g., fa-server):', page.icon) || page.icon;
         const newIconColor = prompt('Edit icon color (e.g., #E58325):', page.icon_color) || page.icon_color;
         const newTitleColor = prompt('Edit title color:', page.title_color) || page.title_color;
-        // For content, we'll just show a textarea with JSON
         const contentStr = prompt('Edit content (JSON array of blocks):', JSON.stringify(page.content, null, 2));
         let newContent;
         try { newContent = JSON.parse(contentStr); } catch(e) { newContent = page.content; }
@@ -742,7 +747,6 @@
     });
   }
 
-  // Add category
   document.getElementById('addCategoryBtn').addEventListener('click', () => {
     const name = prompt('Category name:');
     if (!name) return;
@@ -754,9 +758,7 @@
       .then(() => loadAdminData());
   });
 
-  // Add page (simplified)
   document.getElementById('addPageBtn').addEventListener('click', async () => {
-    // First, get list of categories
     const { data: cats, error } = await supabase.from('categories').select('id, name');
     if (error || !cats || cats.length === 0) {
       alert('Please create a category first.');
@@ -774,7 +776,7 @@
     const icon = prompt('Icon (Font Awesome class):') || 'fa-file';
     const iconColor = prompt('Icon color:') || '#E58325';
     const titleColor = prompt('Title color:') || '#FFFFFF';
-    const content = []; // start empty
+    const content = [];
     const sub_sections = [];
     const position = 0;
     await supabase.from('pages').insert([{
@@ -816,10 +818,8 @@
     if (pageErr) { console.error(pageErr); return; }
     allPages = pages;
 
-    // Build sidebar
     const sidebarNav = document.getElementById('sidebarNav');
     sidebarNav.innerHTML = '';
-    // Home link
     const homeLink = document.createElement('div');
     homeLink.className = 'sidebar-link home-link';
     homeLink.dataset.page = 'home';
@@ -846,7 +846,6 @@
       });
     });
 
-    // Navigate to home by default
     navigateTo('home');
   }
 
@@ -859,7 +858,6 @@
     const content = document.getElementById('dynamicContent');
 
     if (pageId === 'home') {
-      // Render home page (static)
       content.innerHTML = `
         <div class="page-title title-home"><i class="fas fa-home"></i> Welcome to Eagler.Host-Wiki</div>
         <div class="content-block" style="display:block;">
@@ -879,7 +877,6 @@
           </div>
         </div>
       `;
-      // Update sidebar active
       document.querySelectorAll('.sidebar-link').forEach(link => {
         link.classList.remove('active-home', 'active-info', 'active-setup');
         if (link.dataset.page === 'home') link.classList.add('active-home');
@@ -892,15 +889,12 @@
       return;
     }
 
-    // Determine title class
     const cat = allCategories.find(c => c.id === page.category_id);
     let titleClass = 'title-info';
     if (cat && cat.name.toLowerCase().includes('setup')) titleClass = 'title-setup';
 
-    // Build content
     let html = `<div class="page-title ${titleClass}"><i class="fas ${page.icon}" style="color:${page.icon_color};"></i> ${page.title}</div>`;
 
-    // Render content blocks
     if (page.content && page.content.length > 0) {
       page.content.forEach(block => {
         if (block.type === 'text') {
@@ -919,7 +913,6 @@
       });
     }
 
-    // Render sub-sections (like Credits & XP tabs)
     if (page.sub_sections && page.sub_sections.length > 0) {
       html += `<div class="sub-tabs-container">`;
       page.sub_sections.forEach((sub, index) => {
@@ -948,7 +941,6 @@
 
     content.innerHTML = html;
 
-    // Sub-tab click handlers
     document.querySelectorAll('.sub-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const idx = parseInt(tab.dataset.sub);
@@ -959,7 +951,6 @@
       });
     });
 
-    // Update sidebar active
     document.querySelectorAll('.sidebar-link').forEach(link => {
       link.classList.remove('active-home', 'active-info', 'active-setup');
       if (link.dataset.page === pageId) {
@@ -982,11 +973,9 @@
       .select('*')
       .order('created_at', { ascending: false });
     if (error) { console.error(error); return; }
-    // Check for new announcements
     const newIds = data.filter(a => !seenAnnouncements.includes(a.id)).map(a => a.id);
     if (newIds.length > 0) {
       hasNewAnnouncement = true;
-      // Show red dot on bell
       document.querySelectorAll('.icon-btn.outline-green').forEach(btn => {
         let dot = btn.querySelector('.red-dot');
         if (!dot) {
@@ -1002,7 +991,6 @@
       hasNewAnnouncement = false;
       document.querySelectorAll('.icon-btn.outline-green .red-dot').forEach(dot => dot.style.display = 'none');
     }
-    // Render in modal
     const list = document.getElementById('announcementList');
     if (data.length === 0) {
       list.innerHTML = '<p style="color:#B88A5A;">No announcements yet.</p>';
@@ -1019,19 +1007,15 @@
       </div>
     `).join('');
 
-    // Mark as seen
     if (newIds.length > 0) {
       seenAnnouncements = [...seenAnnouncements, ...newIds];
       localStorage.setItem('seenAnnouncements', JSON.stringify(seenAnnouncements));
-      // Also save to Supabase announcement_seen for persistence across devices? We'll keep local.
     }
   }
 
-  // Open announcement modal
   document.querySelectorAll('.icon-btn.outline-green').forEach(btn => {
     btn.addEventListener('click', () => {
       document.getElementById('announcementModal').classList.add('active');
-      // Remove red dot
       document.querySelectorAll('.icon-btn.outline-green .red-dot').forEach(dot => dot.style.display = 'none');
       loadAnnouncements();
     });
@@ -1070,7 +1054,6 @@
       return;
     }
     const userId = getUserId();
-    // Check if user already has a pending suggestion
     const { data: existing, error: checkErr } = await supabase
       .from('suggestions')
       .select('id')
@@ -1102,13 +1085,12 @@
   // ============================================================
   document.querySelectorAll('.icon-btn.outline-white').forEach(btn => {
     btn.addEventListener('click', () => {
-      // Show settings modal or alert
       alert('Settings feature coming soon.');
     });
   });
 
   // ============================================================
-  // SEARCH (with word matching)
+  // SEARCH
   // ============================================================
   const searchInput = document.getElementById('searchInput');
   const searchDropdown = document.getElementById('searchDropdown');
@@ -1150,7 +1132,6 @@
     query = query.toLowerCase().trim();
     const items = buildSearchItems();
     if (query === '') {
-      // Show default items: What is Eagler.host, Credits & XP, Create a server, FAQ
       const defaults = items.filter(i => ['what-is','credits-xp','setup-panel','faq'].includes(i.page));
       renderSearchDropdown(defaults);
       return;
@@ -1212,13 +1193,9 @@
   // ============================================================
   // INIT
   // ============================================================
-  // Load announcements on page load
   window.addEventListener('DOMContentLoaded', () => {
     loadAnnouncements();
-    // If admin mode already active, show admin panel button?
-    if (adminMode) {
-      console.log('Admin mode is active.');
-    }
+    if (adminMode) console.log('Admin mode is active.');
   });
 
   console.log('Eagler.Host-Wiki with Supabase backend and full admin panel.');
